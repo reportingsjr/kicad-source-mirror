@@ -170,14 +170,13 @@ set( PCBNEW_EXPORTERS
     )
 
 set( PCBNEW_AUTOROUTER_SRCS
-    autorouter/rect_placement/rect_placement.cpp
     autorouter/move_and_route_event_functions.cpp
     autorouter/auto_place_footprints.cpp
     autorouter/autorout.cpp
     autorouter/routing_matrix.cpp
     autorouter/dist.cpp
     autorouter/queue.cpp
-    spread_footprints.cpp
+    #    spread_footprints.cpp
     autorouter/solve.cpp
     autorouter/graphpcb.cpp
     autorouter/work.cpp

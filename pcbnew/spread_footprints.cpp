@@ -45,7 +45,7 @@
 #include <class_board.h>
 #include <class_module.h>
 
-#include <rect_placement/rect_placement.h>
+#include "autorouter/rect_placement/rect_placement.h"
 
 struct TSubRect : public CRectPlacement::TRect
 {

@@ -335,6 +335,8 @@ set( PCB_COMMON_SRCS
     fp_lib_table_keywords.cpp
     fpid.cpp
     fp_lib_table.cpp
+    ../pcbnew/spread_footprints.cpp
+    ../pcbnew/autorouter/rect_placement/rect_placement.cpp
 )
 
 set( PCB_COMMON_SRCS
