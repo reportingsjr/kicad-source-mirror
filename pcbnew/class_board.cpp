@@ -2539,6 +2539,9 @@ void BOARD::ReplaceNetlist( NETLIST& aNetlist, bool aDeleteSinglePadNets,
         }
     }
 
+    // Spread out all of the footprints so they aren't just stacked on top of each other
+    SpreadFootprints( false );
+
     // We need the pad list, for next tests.
     // padlist is the list of pads, sorted by netname.
     BuildListOfNets();

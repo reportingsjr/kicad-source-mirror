@@ -177,7 +177,7 @@ set( PCBNEW_AUTOROUTER_SRCS
     autorouter/routing_matrix.cpp
     autorouter/dist.cpp
     autorouter/queue.cpp
-    autorouter/spread_footprints.cpp
+    spread_footprints.cpp
     autorouter/solve.cpp
     autorouter/graphpcb.cpp
     autorouter/work.cpp
