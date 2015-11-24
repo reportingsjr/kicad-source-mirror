@@ -1580,17 +1580,6 @@ public:
     void LockModule( MODULE* aModule, bool aLocked );
 
     /**
-     * Function SpreadFootprints
-     * Footprints (after loaded by reading a netlist for instance) are moved
-     * to be in a small free area (outside the current board) without overlapping.
-     * @param aFootprintsOutsideBoardOnly: true to move only
-     * footprints outside the board outlines
-     * (they are outside if the position of a footprint is outside
-     * the board outlines bounding box
-     */
-    void SpreadFootprints( bool aFootprintsOutsideBoardOnly );
-
-    /**
      * Function AutoPlaceModule
      * automatically places footprints within the confines of the PCB edges.
      * The components with the FIXED status are not moved.  If the menu is

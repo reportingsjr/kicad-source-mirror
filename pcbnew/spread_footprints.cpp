@@ -169,16 +169,16 @@ static bool sortModulesbySheetPath( MODULE* ref, MODULE* compare );
  * starting from the mouse cursor
  * The components with the FIXED status set are not moved
  */
-void PCB_EDIT_FRAME::SpreadFootprints( bool aFootprintsOutsideBoardOnly )
+void BOARD::SpreadFootprints( bool aFootprintsOutsideBoardOnly )
 {
-    EDA_RECT bbox = GetBoard()->ComputeBoundingBox( true );
+    EDA_RECT bbox = ComputeBoundingBox( true );
     bool     edgesExist = ( bbox.GetWidth() || bbox.GetHeight() );
 
     // no edges exist
     if( aFootprintsOutsideBoardOnly && !edgesExist )
     {
-        DisplayError( this,
-                      _( "Could not automatically place footprints. No board outlines detected." ) );
+        //DisplayError( this,
+        //              _( "Could not automatically place footprints. No board outlines detected." ) );
         return;
     }
 
@@ -188,7 +188,7 @@ void PCB_EDIT_FRAME::SpreadFootprints( bool aFootprintsOutsideBoardOnly )
 
     // Build candidate list
     // calculate also the area needed by these footprints
-    MODULE* module = GetBoard()->m_Modules;
+    MODULE* module = m_Modules;
     std::vector <MODULE*> moduleList;
 
     for( ; module != NULL; module = module->Next() )
@@ -234,7 +234,7 @@ void PCB_EDIT_FRAME::SpreadFootprints( bool aFootprintsOutsideBoardOnly )
     double subsurface;
     double placementsurface = 0.0;
 
-    wxPoint placementAreaPosition = GetCrossHairPosition();
+    wxPoint placementAreaPosition( 0, 0 ); 
 
     // We do not want to move footprints inside an existing board.
     // move the placement area position outside the board bounding box
@@ -341,11 +341,6 @@ void PCB_EDIT_FRAME::SpreadFootprints( bool aFootprintsOutsideBoardOnly )
         }
     }   // End pass
 
-    // Undo: commit list
-    SaveCopyInUndoList( undoList, UR_CHANGED );
-    OnModify();
-
-    m_canvas->Refresh();
 }
 
 
