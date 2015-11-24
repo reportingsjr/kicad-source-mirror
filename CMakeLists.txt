@@ -4,7 +4,7 @@
 if( DEFINED CMAKE_BUILD_TYPE )
     set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "Set to either \"Release\" or \"Debug\"" )
 else()
-    set( CMAKE_BUILD_TYPE Release CACHE STRING "Set to either \"Release\" or \"Debug\"" )
+  set( CMAKE_BUILD_TYPE Debug CACHE STRING "Set to either \"Release\" or \"Debug\"" )
 endif()
 
 project( kicad )
@@ -71,6 +71,7 @@ option( USE_OSX_DEPS_BUILDER
 # in KiCad errors.
 option( KICAD_SKIP_BOOST
     "Skip building downloaded Boost library components, use Boost from your system."
+    ON
     )
 mark_as_advanced( KICAD_SKIP_BOOST )    # Normal builders should build Boost.
 
