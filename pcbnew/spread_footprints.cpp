@@ -44,6 +44,7 @@
 #include <wxPcbStruct.h>
 #include <class_board.h>
 #include <class_module.h>
+#include <boost/foreach.hpp>
 
 #include "autorouter/rect_placement/rect_placement.h"
 
@@ -169,8 +170,9 @@ static bool sortModulesbySheetPath( MODULE* ref, MODULE* compare );
  * starting from the mouse cursor
  * The components with the FIXED status set are not moved
  */
-void BOARD::SpreadFootprints( bool aFootprintsOutsideBoardOnly )
+void BOARD::SpreadFootprints( bool aFootprintsOutsideBoardOnly , std::vector <MODULE*>& aFootprintList )
 {
+    MODULE* module;
     EDA_RECT bbox = ComputeBoundingBox( true );
     bool     edgesExist = ( bbox.GetWidth() || bbox.GetHeight() );
 
@@ -188,10 +190,9 @@ void BOARD::SpreadFootprints( bool aFootprintsOutsideBoardOnly )
 
     // Build candidate list
     // calculate also the area needed by these footprints
-    MODULE* module = m_Modules;
-    std::vector <MODULE*> moduleList;
 
-    for( ; module != NULL; module = module->Next() )
+    std::vector <MODULE*> moduleList;
+    BOOST_FOREACH(MODULE* module, aFootprintList)
     {
         module->CalculateBoundingBox();
 
@@ -212,21 +213,6 @@ void BOARD::SpreadFootprints( bool aFootprintsOutsideBoardOnly )
 
     // sort footprints by sheet path. we group them later by sheet
     sort( moduleList.begin(), moduleList.end(), sortModulesbySheetPath );
-
-    // Undo command: init undo list
-    PICKED_ITEMS_LIST  undoList;
-    undoList.m_Status = UR_CHANGED;
-    ITEM_PICKER        picker( NULL, UR_CHANGED );
-
-    for( unsigned ii = 0; ii < moduleList.size(); ii++ )
-    {
-        module = moduleList[ii];
-
-        // Undo: add copy of module to undo list
-        picker.SetItem( module );
-        picker.SetLink( module->Clone() );
-        undoList.PushItem( picker );
-    }
 
     // Extract and place footprints by sheet
     std::vector <MODULE*> moduleListBySheet;
@@ -264,7 +250,7 @@ void BOARD::SpreadFootprints( bool aFootprintsOutsideBoardOnly )
             module = moduleList[ii];
             bool islastItem = false;
 
-            if( ii == moduleList.size() - 1 ||
+            if( module == moduleList.back() ||
                 ( moduleList[ii]->GetPath().BeforeLast( '/' ) !=
                   moduleList[ii+1]->GetPath().BeforeLast( '/' ) ) )
                 islastItem = true;

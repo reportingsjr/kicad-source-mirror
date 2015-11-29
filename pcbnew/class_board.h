@@ -940,7 +940,7 @@ public:
      * (they are outside if the position of a footprint is outside
      * the board outlines bounding box
      */
-    void SpreadFootprints( bool aFootprintsOutsideBoardOnly );
+    void SpreadFootprints( bool aFootprintsOutsideBoardOnly, std::vector <MODULE*>& aFootprintList );
 
     /**
      * Function ReplaceNetlist
