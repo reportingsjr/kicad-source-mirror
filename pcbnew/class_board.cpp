@@ -2266,7 +2266,7 @@ void BOARD::ReplaceNetlist( NETLIST& aNetlist, bool aDeleteSinglePadNets,
     wxString       msg;
     D_PAD*         pad;
     MODULE*        footprint;
-
+    std::vector <MODULE*> newFootprintList;
     if( !IsEmpty() )
     {
         // Position new components below any existing board features.
@@ -2338,9 +2338,10 @@ void BOARD::ReplaceNetlist( NETLIST& aNetlist, bool aDeleteSinglePadNets,
                 // Owned by NETLIST, can only copy it.
                 footprint = new MODULE( *component->GetModule() );
                 footprint->SetParent( this );
-                footprint->SetPosition( bestPosition );
+                //footprint->SetPosition( bestPosition );
                 footprint->SetTimeStamp( GetNewTimeStamp() );
                 Add( footprint, ADD_APPEND );
+                newFootprintList.push_back( footprint );
             }
         }
         else                           // An existing footprint.
@@ -2540,7 +2541,7 @@ void BOARD::ReplaceNetlist( NETLIST& aNetlist, bool aDeleteSinglePadNets,
     }
 
     // Spread out all of the footprints so they aren't just stacked on top of each other
-    SpreadFootprints( false );
+    SpreadFootprints( false, newFootprintList );
 
     // We need the pad list, for next tests.
     // padlist is the list of pads, sorted by netname.
