@@ -2338,7 +2338,7 @@ void BOARD::ReplaceNetlist( NETLIST& aNetlist, bool aDeleteSinglePadNets,
                 // Owned by NETLIST, can only copy it.
                 footprint = new MODULE( *component->GetModule() );
                 footprint->SetParent( this );
-                //footprint->SetPosition( bestPosition );
+                footprint->SetPosition( bestPosition );
                 footprint->SetTimeStamp( GetNewTimeStamp() );
                 Add( footprint, ADD_APPEND );
                 newFootprintList.push_back( footprint );
