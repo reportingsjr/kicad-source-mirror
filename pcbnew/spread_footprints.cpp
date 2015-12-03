@@ -157,10 +157,9 @@ void moveFootprintsInArea( CRectPlacement& aPlacementArea,
         MODULE * module = aModuleList[vecSubRects[it].n];
 
         EDA_RECT fpBBox = module->GetBoundingBox();
-        wxPoint mod_pos = pos + ( module->GetPosition() - fpBBox.GetOrigin() )
-                          + aFreeArea.GetOrigin();
-
-        module->Move( mod_pos - module->GetPosition() );
+        wxPoint mod_pos = pos - fpBBox.GetOrigin() + aFreeArea.GetOrigin();
+        std::cout << mod_pos.x << " " << mod_pos.y << "\n";
+        module->SetPosition( mod_pos );
     }
 }
 
@@ -225,7 +224,7 @@ void BOARD::SpreadFootprints( bool aFootprintsOutsideBoardOnly , std::vector <MO
     // We do not want to move footprints inside an existing board.
     // move the placement area position outside the board bounding box
     // to the left of the board
-    if( edgesExist )
+    //if( edgesExist )
     {
         if( placementAreaPosition.x < bbox.GetEnd().x &&
             placementAreaPosition.y < bbox.GetEnd().y )
