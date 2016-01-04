@@ -66,7 +66,7 @@ void PCB_EDIT_FRAME::ReadPcbNetlist( const wxString& aNetlistFileName,
     NETLIST         netlist;
     KIGFX::VIEW*    view = GetGalCanvas()->GetView();
     BOARD*          board = GetBoard();
-    std::vector<MODULE*> newFootprints = new std::vector<MODULE*>();
+    std::vector<MODULE*> newFootprints;
 
     netlist.SetIsDryRun( aIsDryRun );
     netlist.SetFindByTimeStamp( aSelectByTimeStamp );
@@ -114,7 +114,7 @@ void PCB_EDIT_FRAME::ReadPcbNetlist( const wxString& aNetlistFileName,
     m_toolManager->RunAction( COMMON_ACTIONS::selectionClear, true );
 
     netlist.SortByReference();
-    board->ReplaceNetlist( netlist, aDeleteSinglePadNets, *newFootprints, aReporter );
+    board->ReplaceNetlist( netlist, aDeleteSinglePadNets, &newFootprints, aReporter );
     
     BOOST_FOREACH( MODULE* footprint, newFootprints )
     {
