@@ -139,8 +139,15 @@ void PCB_EDIT_FRAME::OnPlaceOrRouteFootprints( wxCommandEvent& event )
             DisplayError( this, _( "No footprint found!" ) );
             return;
         }
+        else
+        {
+            MODULE* module = GetBoard()->m_Modules;
+            std::vector<MODULE*> moduleList;
+            for( ; module != NULL; module = module->Next() )
+                moduleList.push_back( module );
 
-        SpreadFootprints( id == ID_POPUP_PCB_SPREAD_NEW_MODULES );
+            SpreadFootprints( &moduleList, id == ID_POPUP_PCB_SPREAD_NEW_MODULES );
+        }
         break;
 
     case ID_POPUP_PCB_AUTOROUTE_ALL_MODULES:

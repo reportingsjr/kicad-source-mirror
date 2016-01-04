@@ -35,6 +35,7 @@
  */
 
 #include <algorithm>
+#include <boost/foreach.hpp>
 
 #include <fctsys.h>
 #include <convert_to_biu.h>
@@ -169,7 +170,7 @@ static bool sortModulesbySheetPath( MODULE* ref, MODULE* compare );
  * starting from the mouse cursor
  * The components with the FIXED status set are not moved
  */
-void PCB_EDIT_FRAME::SpreadFootprints( bool aFootprintsOutsideBoardOnly )
+void PCB_EDIT_FRAME::SpreadFootprints( std::vector<MODULE*>* aFootprints, bool aFootprintsOutsideBoardOnly )
 {
     EDA_RECT bbox = GetBoard()->ComputeBoundingBox( true );
     bool     edgesExist = ( bbox.GetWidth() || bbox.GetHeight() );
@@ -191,20 +192,20 @@ void PCB_EDIT_FRAME::SpreadFootprints( bool aFootprintsOutsideBoardOnly )
     MODULE* module = GetBoard()->m_Modules;
     std::vector <MODULE*> moduleList;
 
-    for( ; module != NULL; module = module->Next() )
+    BOOST_FOREACH( MODULE* footprint, *aFootprints )
     {
-        module->CalculateBoundingBox();
+        footprint->CalculateBoundingBox();
 
         if( outsideBrdFilter )
         {
-            if( bbox.Contains( module->GetPosition() ) )
+            if( bbox.Contains( footprint->GetPosition() ) )
                 continue;
         }
 
-        if( module->IsLocked() )
+        if( footprint->IsLocked() )
             continue;
 
-        moduleList.push_back(module);
+        moduleList.push_back( footprint );
     }
 
     if( moduleList.size() == 0 )    // Nothing to do
@@ -234,7 +235,7 @@ void PCB_EDIT_FRAME::SpreadFootprints( bool aFootprintsOutsideBoardOnly )
     double subsurface;
     double placementsurface = 0.0;
 
-    wxPoint placementAreaPosition = GetCrossHairPosition();
+    wxPoint placementAreaPosition(0, 0); //= GetCrossHairPosition();
 
     // We do not want to move footprints inside an existing board.
     // move the placement area position outside the board bounding box

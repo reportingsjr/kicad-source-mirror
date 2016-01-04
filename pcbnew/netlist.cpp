@@ -115,7 +115,9 @@ void PCB_EDIT_FRAME::ReadPcbNetlist( const wxString& aNetlistFileName,
 
     netlist.SortByReference();
     board->ReplaceNetlist( netlist, aDeleteSinglePadNets, &newFootprints, aReporter );
-    
+   
+    SpreadFootprints( &newFootprints, false );
+
     BOOST_FOREACH( MODULE* footprint, newFootprints )
     {
         m_toolManager->RunAction( COMMON_ACTIONS::selectItem, true, footprint );
