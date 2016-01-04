@@ -962,7 +962,7 @@ public:
      *                  the #BOARD.  If NULL, no change reporting occurs.
      */
     void ReplaceNetlist( NETLIST& aNetlist, bool aDeleteSinglePadNets,
-                         DLIST<MODULE>* aNewFootprints, REPORTER* aReporter = NULL );
+                         std::vector<MODULE*>* aNewFootprints, REPORTER* aReporter = NULL );
 
     /**
      * Function SortedNetnamesList
