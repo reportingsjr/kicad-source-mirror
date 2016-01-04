@@ -66,6 +66,7 @@ void PCB_EDIT_FRAME::ReadPcbNetlist( const wxString& aNetlistFileName,
     NETLIST         netlist;
     KIGFX::VIEW*    view = GetGalCanvas()->GetView();
     BOARD*          board = GetBoard();
+    DLIST<MODULE>*  newFootprints;
 
     netlist.SetIsDryRun( aIsDryRun );
     netlist.SetFindByTimeStamp( aSelectByTimeStamp );
@@ -113,7 +114,13 @@ void PCB_EDIT_FRAME::ReadPcbNetlist( const wxString& aNetlistFileName,
     m_toolManager->RunAction( COMMON_ACTIONS::selectionClear, true );
 
     netlist.SortByReference();
-    board->ReplaceNetlist( netlist, aDeleteSinglePadNets, aReporter );
+    board->ReplaceNetlist( netlist, aDeleteSinglePadNets, newFootprints, aReporter );
+    
+    for( MODULE* footprint = *newFootprints; footprint; footprint = footprint->Next() )
+    {
+        m_toolManager->RunAction( COMMON_ACTIONS::selectItem, true, footprint );
+    }
+    m_toolManager->InvokeTool( "pcbnew.InteractiveEdit" );
 
     // If it was a dry run, nothing has changed so we're done.
     if( netlist.IsDryRun() )

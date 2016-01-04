@@ -962,7 +962,7 @@ public:
      *                  the #BOARD.  If NULL, no change reporting occurs.
      */
     void ReplaceNetlist( NETLIST& aNetlist, bool aDeleteSinglePadNets,
-                         REPORTER* aReporter = NULL );
+                         DLIST<MODULE>* aNewFootprints, REPORTER* aReporter = NULL );
 
     /**
      * Function SortedNetnamesList

@@ -2259,13 +2259,14 @@ bool BOARD::NormalizeAreaPolygon( PICKED_ITEMS_LIST * aNewZonesList, ZONE_CONTAI
 
 
 void BOARD::ReplaceNetlist( NETLIST& aNetlist, bool aDeleteSinglePadNets,
-                            REPORTER* aReporter )
+                            DLIST<MODULE>* aNewFootprints, REPORTER* aReporter )
 {
     unsigned       i;
     wxPoint        bestPosition;
     wxString       msg;
     D_PAD*         pad;
     MODULE*        footprint;
+    DLIST<MODULE>*  newFootprints;
 
     if( !IsEmpty() )
     {
@@ -2340,6 +2341,7 @@ void BOARD::ReplaceNetlist( NETLIST& aNetlist, bool aDeleteSinglePadNets,
                 footprint->SetParent( this );
                 footprint->SetPosition( bestPosition );
                 footprint->SetTimeStamp( GetNewTimeStamp() );
+                newFootprints->Append( footprint );
                 Add( footprint, ADD_APPEND );
             }
         }
@@ -2666,6 +2668,8 @@ void BOARD::ReplaceNetlist( NETLIST& aNetlist, bool aDeleteSinglePadNets,
             }
         }
     }
+
+    std::swap( newFootprints, aNewFootprints );
 }
 
 
