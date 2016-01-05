@@ -73,6 +73,21 @@ public:
     virtual double GetUnitScale();
 };
 
+class UNIT_SELECTOR_THICKNESS: public UNIT_SELECTOR
+{
+public:
+    UNIT_SELECTOR_THICKNESS( wxWindow *parent, wxWindowID id,
+                  const wxPoint& pos, const wxSize& size,
+                  const wxArrayString& choices, long style = 0 );
+
+    /**
+     * Function GetUnitScale
+     * @return the scaling factor to convert users units
+     * to normalized units (meter) including oz/ft^2
+     */
+    virtual double GetUnitScale();
+};
+
 class UNIT_SELECTOR_FREQUENCY: public UNIT_SELECTOR
 {
 public:
