@@ -141,12 +141,12 @@ void PCB_EDIT_FRAME::OnPlaceOrRouteFootprints( wxCommandEvent& event )
         }
         else
         {
-            MODULE* module = GetBoard()->m_Modules;
-            std::vector<MODULE*> moduleList;
-            for( ; module != NULL; module = module->Next() )
-                moduleList.push_back( module );
+            MODULE* footprint = GetBoard()->m_Modules;
+            std::vector<MODULE*> footprintList;
+            for( ; footprint != NULL; footprint = footprint->Next() )
+                footprintList.push_back( footprint );
 
-            SpreadFootprints( &moduleList, id == ID_POPUP_PCB_SPREAD_NEW_MODULES );
+            SpreadFootprints( &footprintList, id == ID_POPUP_PCB_SPREAD_NEW_MODULES, true );
         }
         break;
 

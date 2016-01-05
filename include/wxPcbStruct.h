@@ -1588,12 +1588,16 @@ public:
      * Footprints (after loaded by reading a netlist for instance) are moved
      * to be in a small free area (outside the current board) without overlapping.
      * @param aFootprints: a list of footprints to be spread out.
-     * @param aFootprintsOutsideBoardOnly: true to move only
-     * footprints outside the board outlines
-     * (they are outside if the position of a footprint is outside
-     * the board outlines bounding box
+     * @param aMoveFootprintsOutsideBoardOnly: true to move only
+     *        footprints outside the board outlines
+     *        (they are outside if the position of a footprint is outside
+     *        the board outlines bounding box).
+     * @param aCheckForBoardEdges: true to try to place footprints outside of
+     *        board edges.
      */
-    void SpreadFootprints( std::vector<MODULE*>* aFootprints, bool aFootprintsOutsideBoardOnly );
+    void SpreadFootprints( std::vector<MODULE*>* aFootprints,
+                           bool                  aMoveFootprintsOutsideBoardOnly,
+                           bool                  aCheckForBoardEdges );
 
     /**
      * Function AutoPlaceModule
