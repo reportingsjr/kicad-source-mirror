@@ -116,17 +116,21 @@ void PCB_EDIT_FRAME::ReadPcbNetlist( const wxString& aNetlistFileName,
     netlist.SortByReference();
     board->ReplaceNetlist( netlist, aDeleteSinglePadNets, &newFootprints, aReporter );
    
-    SpreadFootprints( &newFootprints, false );
-
-    BOOST_FOREACH( MODULE* footprint, newFootprints )
-    {
-        m_toolManager->RunAction( COMMON_ACTIONS::selectItem, true, footprint );
-    }
-    m_toolManager->InvokeTool( "pcbnew.InteractiveEdit" );
 
     // If it was a dry run, nothing has changed so we're done.
     if( netlist.IsDryRun() )
         return;
+
+    if( IsGalCanvasActive() )
+    {
+        SpreadFootprints( &newFootprints, false, false );
+
+        BOOST_FOREACH( MODULE* footprint, newFootprints )
+        {
+            m_toolManager->RunAction( COMMON_ACTIONS::selectItem, true, footprint );
+        }
+        m_toolManager->InvokeTool( "pcbnew.InteractiveEdit" );
+    }
 
     OnModify();
 
