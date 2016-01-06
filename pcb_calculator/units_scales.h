@@ -37,7 +37,7 @@
 #define UNIT_MICRON 1e-6        // um to meter
 #define UNIT_INCH (1e-2*2.54)   // inch to meter
 #define UNIT_MIL (1e-5*2.54)    // mil (or thou) to meter
-#define UNIT_OZSQFT (1.378*UNIT_MIL) // 1 oz/ft^2 is 1.378 mils
+#define UNIT_OZSQFT (34.40*UNIT_MICRON) // 1 oz/ft^2 is 34.30 microns nominal, 30.90 minimum
 
 #define UNIT_GHZ 1e9
 #define UNIT_MHZ 1e6
