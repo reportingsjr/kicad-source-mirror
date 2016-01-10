@@ -64,7 +64,12 @@ BOARD_NETLIST_UPDATER::~BOARD_NETLIST_UPDATER ()
 
 void BOARD_NETLIST_UPDATER::pushUndo( BOARD_ITEM*    aItem, UNDO_REDO_T    aCommandType )
 {
-    m_undoList->PushItem( ITEM_PICKER( aItem, aCommandType ) );
+    ITEM_PICKER picker( aItem, aCommandType );
+
+    if( aCommandType == UR_CHANGED )
+        picker.SetLink ( aItem->Clone() );
+
+    m_undoList->PushItem( picker );
 }
 
 wxPoint BOARD_NETLIST_UPDATER::estimateComponentInsertionPosition()
@@ -192,7 +197,7 @@ MODULE* BOARD_NETLIST_UPDATER::replaceComponent( NETLIST& aNetlist, MODULE *aPcb
             else
                 newFootprint->SetPath( aPcbComponent->GetPath() );
 
-            aPcbComponent->CopyNetlistSettings( newFootprint );
+            aPcbComponent->CopyNetlistSettings( newFootprint, false );
             m_board->Remove( aPcbComponent );
             m_board->Add( newFootprint, ADD_APPEND );
 
@@ -231,7 +236,8 @@ bool BOARD_NETLIST_UPDATER::updateComponentParameters( MODULE *aPcbComponent, CO
     if( !aPcbComponent )
         return false;
 
-    pushUndo ( aPcbComponent, UR_CHANGED );
+    if ( !m_isDryRun )
+        pushUndo ( aPcbComponent, UR_CHANGED );
 
     // Test for reference designator field change.
     if( aPcbComponent->GetReference() != aNewComponent->GetReference() )
@@ -320,7 +326,6 @@ bool BOARD_NETLIST_UPDATER::updateComponentPadConnections( MODULE *aPcbComponent
 
             if( !m_isDryRun )
             {
-                pushUndo( pad, UR_CHANGED );
                 pad->SetNetCode( NETINFO_LIST::UNCONNECTED );
             }
         }
@@ -375,7 +380,6 @@ bool BOARD_NETLIST_UPDATER::updateComponentPadConnections( MODULE *aPcbComponent
 
                 if ( !m_isDryRun )
                 {
-                    pushUndo( pad, UR_CHANGED );
                     pad->SetNetCode( netinfo->GetNet() );
                 }
             }
@@ -417,7 +421,7 @@ bool BOARD_NETLIST_UPDATER::deleteUnusedComponents( NETLIST& aNetlist )
             if( !m_isDryRun )
             {
                 pushUndo( module, UR_DELETED );
-                module->DeleteStructure();
+                m_board->Remove ( module );
             }
         }
     }
@@ -488,7 +492,7 @@ bool BOARD_NETLIST_UPDATER::deleteSinglePadNets()
                                 GetChars( previouspad->GetPadName() ) );
                     m_reporter->Report( msg, REPORTER::RPT_ACTION );
 
-                    pushUndo( previouspad, UR_CHANGED );
+                    //pushUndo( previouspad, UR_CHANGED );
                     previouspad->SetNetCode( NETINFO_LIST::UNCONNECTED );
                 }
             }
@@ -507,7 +511,7 @@ bool BOARD_NETLIST_UPDATER::deleteSinglePadNets()
     // Examine last pad
     if( pad && count == 1 )
     {
-        pushUndo( pad, UR_CHANGED );
+        //pushUndo( pad, UR_CHANGED );
         pad->SetNetCode( NETINFO_LIST::UNCONNECTED );
     }
     return true;
@@ -584,6 +588,7 @@ bool BOARD_NETLIST_UPDATER::UpdateNetlist( NETLIST& aNetlist )
     m_errorCount = 0;
     m_warningCount = 0;
 
+
     if( !m_isDryRun )
     {
         m_board->SetStatus( 0 );
@@ -643,6 +648,7 @@ bool BOARD_NETLIST_UPDATER::UpdateNetlist( NETLIST& aNetlist )
     }
 
     // Update the ratsnest
+    m_frame->Compile_Ratsnest( NULL, true );
     m_board->GetRatsnest()->ProcessBoard();
 
     testConnectivity( aNetlist );

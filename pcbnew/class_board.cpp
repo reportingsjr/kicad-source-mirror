@@ -673,8 +673,13 @@ void BOARD::Add( BOARD_ITEM* aBoardItem, int aControl )
     switch( aBoardItem->Type() )
     {
     case PCB_NETINFO_T:
+    {
+        NETINFO_ITEM *item = (NETINFO_ITEM*) aBoardItem;
         aBoardItem->SetParent ( this );
         m_NetInfo.AppendNet ( (NETINFO_ITEM*) aBoardItem );
+
+        break;
+    }
 
     // this one uses a vector
     case PCB_MARKER_T:
@@ -764,9 +769,12 @@ BOARD_ITEM* BOARD::Remove( BOARD_ITEM* aBoardItem )
     switch( aBoardItem->Type() )
     {
     case PCB_NETINFO_T:
-        m_NetInfo.RemoveNet ( (NETINFO_ITEM*) aBoardItem );
-        break;
+    {
+        NETINFO_ITEM *item = (NETINFO_ITEM*) aBoardItem;
+        m_NetInfo.RemoveNet ( item );
 
+        break;
+    }
     case PCB_MARKER_T:
 
         // find the item in the vector, then remove it

@@ -156,5 +156,3 @@ private:
 };
 
 #endif
-
-

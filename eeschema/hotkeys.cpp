@@ -225,6 +225,7 @@ static EDA_HOTKEY HkAutoplaceFields( _HKI( "Autoplace Fields" ), HK_AUTOPLACE_FI
 
 static EDA_HOTKEY HkUpdatePcbFromSch( _HKI( "Update PCB from Schematics" ), HK_UPDATE_PCB_FROM_SCH, WXK_F9 );
 
+
 // List of common hotkey descriptors
 static EDA_HOTKEY* common_Hotkey_List[] =
 {
@@ -297,9 +298,9 @@ static EDA_HOTKEY* schematic_Hotkey_List[] =
     &HkAddBusEntry,
     &HkAddGraphicPolyLine,
     &HkAddGraphicText,
-    &HkLeaveSheet,
     &HkUpdatePcbFromSch,
     &HkAutoplaceFields,
+    &HkLeaveSheet,
     &HkDeleteNode,
     NULL
 };
@@ -345,7 +346,7 @@ struct EDA_HOTKEY_CONFIG g_Eeschema_Hokeys_Descr[] =
 struct EDA_HOTKEY_CONFIG g_Schematic_Hokeys_Descr[] =
 {
     { &g_CommonSectionTag,    common_Hotkey_List,    &commonSectionTitle    },
-    { &schematicSectionTag,   schematic_Hotkey_List, &schematicSectionTitle },
+    { &schematicSectionTag, schematic_Hotkey_List, &schematicSectionTitle },
     { NULL,                   NULL,                  NULL }
 };
 

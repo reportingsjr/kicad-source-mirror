@@ -116,6 +116,7 @@
  * @param aItem = item to find
  *              = NULL to build the list of existing items
  */
+
 static bool TestForExistingItem( BOARD* aPcb, BOARD_ITEM* aItem )
 {
     static std::vector<BOARD_ITEM*> itemsList;
@@ -448,7 +449,10 @@ void PCB_EDIT_FRAME::SaveCopyInUndoList( const PICKED_ITEMS_LIST& aItemsList,
              * If this link is not null, the copy is already done
              */
             if( commandToUndo->GetPickedItemLink( ii ) == NULL )
-                commandToUndo->SetPickedItemLink( item->Clone(), ii );
+            {
+                EDA_ITEM *cloned = item->Clone();
+                commandToUndo->SetPickedItemLink( cloned, ii );
+            }
             break;
 
         case UR_MOVED:
@@ -492,6 +496,8 @@ void PCB_EDIT_FRAME::PutDataInPreviousState( PICKED_ITEMS_LIST* aList, bool aRed
     BOARD_ITEM* item;
     bool        not_found = false;
     bool        reBuild_ratsnest = false;
+    bool        deep_reBuild_ratsnest = false;
+
     KIGFX::VIEW* view = GetGalCanvas()->GetView();
     RN_DATA* ratsnest = GetBoard()->GetRatsnest();
 
@@ -545,9 +551,16 @@ void PCB_EDIT_FRAME::PutDataInPreviousState( PICKED_ITEMS_LIST* aList, bool aRed
             reBuild_ratsnest = true;
             break;
 
+        case PCB_NETINFO_T:
+            reBuild_ratsnest = true;
+            deep_reBuild_ratsnest = true;
+
+            break;
+
         default:
             break;
         }
+
 
         switch( aList->GetPickedItemStatus( ii ) )
         {
@@ -584,6 +597,7 @@ void PCB_EDIT_FRAME::PutDataInPreviousState( PICKED_ITEMS_LIST* aList, bool aRed
 
         case UR_NEW:        /* new items are deleted */
             aList->SetPickedItemStatus( UR_DELETED, ii );
+
             GetBoard()->Remove( item );
 
             if( item->Type() == PCB_MODULE_T )
@@ -592,7 +606,6 @@ void PCB_EDIT_FRAME::PutDataInPreviousState( PICKED_ITEMS_LIST* aList, bool aRed
                 module->RunOnChildren( boost::bind( &KIGFX::VIEW::Remove, view, _1 ) );
             }
             view->Remove( item );
-
             item->ViewUpdate( KIGFX::VIEW_ITEM::GEOMETRY );
             break;
 
@@ -652,12 +665,18 @@ void PCB_EDIT_FRAME::PutDataInPreviousState( PICKED_ITEMS_LIST* aList, bool aRed
         wxMessageBox( wxT( "Incomplete undo/redo operation: some items not found" ) );
 
     // Rebuild pointers and ratsnest that can be changed.
-    if( reBuild_ratsnest && aRebuildRatsnet )
+    if( reBuild_ratsnest ) //&& aRebuildRatsnet )
     {
+        Compile_Ratsnest( NULL, true );
+
         if( IsGalCanvasActive() )
-            ratsnest->Recalculate();
-        else
-            Compile_Ratsnest( NULL, true );
+        {
+            if (deep_reBuild_ratsnest)
+                ratsnest->ProcessBoard();
+            else
+                ratsnest->Recalculate();
+        }
+
     }
 }
 
