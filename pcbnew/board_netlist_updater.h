@@ -127,6 +127,11 @@ public:
 		m_lookupByTimestamp = aEnabled;
 	}
 
+	std::vector<MODULE *> GetAddedComponents() const
+	{
+		return m_addedComponents;
+	}
+
 private:
 
 	void pushUndo( BOARD_ITEM*    aItem, UNDO_REDO_T    aCommandType );
@@ -144,6 +149,8 @@ private:
 	PCB_EDIT_FRAME *m_frame;
 	BOARD *m_board;
 	REPORTER *m_reporter;
+
+	std::vector<MODULE *> m_addedComponents;
 
 	bool m_deleteSinglePadNets;
 	bool m_deleteUnusedComponents;

@@ -84,6 +84,11 @@ void DIALOG_UPDATE_PCB::PerformUpdate( bool aDryRun )
     if( aDryRun )
         return;
 
+    std::vector<MODULE*> newFootprints = updater.GetAddedComponents();
+
+
+
+
     m_frame->OnModify();
 
     m_frame->SetCurItem( NULL );
@@ -104,8 +109,21 @@ void DIALOG_UPDATE_PCB::PerformUpdate( bool aDryRun )
 
     m_frame->SetMsgPanel( board );
 
+
+    if( m_frame->IsGalCanvasActive() )
+    {
+        m_frame->SpreadFootprints( &newFootprints, false, false );
+
+        BOOST_FOREACH( MODULE* footprint, newFootprints )
+        {
+            toolManager->RunAction( COMMON_ACTIONS::selectItem, true, footprint );
+        }
+        toolManager->InvokeTool( "pcbnew.InteractiveEdit" );
+    }
+
     m_btnPerformUpdate->Enable( false );
     m_btnPerformUpdate->SetLabel ( _("Update complete") );
+    m_btnCancel->SetLabel ( _("Close") );
     m_btnCancel->SetFocus( );
 }
 

@@ -129,6 +129,7 @@ MODULE* BOARD_NETLIST_UPDATER::addNewComponent( COMPONENT* aComponent )
             footprint->SetTimeStamp( GetNewTimeStamp() );
 
             m_board->Add( footprint, ADD_APPEND );
+	    m_addedComponents.push_back( footprint );
 
             pushUndo( footprint, UR_NEW );
 
