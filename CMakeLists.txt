@@ -582,6 +582,8 @@ if( KICAD_SCRIPTING OR KICAD_SCRIPTING_MODULES )
 
 endif()
 
+find_package( Libgit2 REQUIRED )
+
 if( EXISTS ${CMAKE_SOURCE_DIR}/include/config.h )
     # This file may exist ( created by an alternate process to the svn test above),
     # e.g. could be created by a checkout script that produces a source tar file.
