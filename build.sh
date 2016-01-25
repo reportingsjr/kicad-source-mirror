@@ -3,7 +3,7 @@
 THREADS=4
 BUILD_DIR=build
 export CC="clang"
-export CXX="iwyu"
+export CXX="clang++"
 #export CC=gcc
 #export CXX=g++
 
@@ -42,11 +42,11 @@ INSTALL_DIR="/opt/kicad-${CURRENT_BRANCH}"
 if [ $FRESH -ne 0 ] || ! [ -f Makefile ]; then
     cmake "$WD" \
         -DCMAKE_BUILD_TYPE=Debug \
+#        -DCMAKE_CXX_INCLUDE_WHAT_YOU_USE=/usr/bin/iwyu \
         -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
         -DKICAD_SCRIPTING=ON \
         -DKICAD_SCRIPTING_MODULES=ON \
-        -DKICAD_SCRIPTING_WXPYTHON=ON \
-        -DKICAD_SKIP_BOOST=ON "$@"
+        -DKICAD_SCRIPTING_WXPYTHON=ON "$@"
 fi
 
 make -j "$THREADS" "$@" #&& exec zsh
